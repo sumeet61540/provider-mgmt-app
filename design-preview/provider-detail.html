@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dr. John Smith — Provider Ops Simulator</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="sidebar-logo">Genzeon <span class="x">×</span> UiPath</div>
+    <nav class="nav">
+      <a href="dashboard.html">📊 Dashboard</a>
+      <a href="provider-list.html" class="active">👥 Providers</a>
+      <a href="audit-log.html">📋 Audit Log</a>
+    </nav>
+    <div class="demo-controls">
+      <div class="nav-section-label">Demo Controls</div>
+      <button class="btn-reset" data-testid="demo-reset-btn">🔄 Reset Demo</button>
+      <div class="scenario-dots">
+        <span class="dot"><span class="dot-indicator dot-complete"></span>A</span>
+        <span class="dot"><span class="dot-indicator dot-progress"></span>B</span>
+        <span class="dot"><span class="dot-indicator dot-ready"></span>C</span>
+        <span class="dot"><span class="dot-indicator dot-ready"></span>D</span>
+      </div>
+    </div>
+    <div class="sidebar-foot">Provider Ops Simulator<br>Demo v1.0</div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <div class="topbar-title">Dr. John Smith</div>
+        <div class="topbar-breadcrumb">Home / Providers / P001</div>
+      </div>
+      <div class="topbar-actions">
+        <span class="live-dot"></span>
+        <span class="text-muted" style="font-size:12.5px;">Live · polling every 5s</span>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <div class="cols-35-65">
+
+        <!-- LEFT: Profile -->
+        <div class="card profile-card">
+          <div class="card-body">
+            <div class="profile-avatar">JS</div>
+            <div class="profile-name">Dr. John Smith</div>
+            <div class="profile-spec">Cardiovascular Disease</div>
+            <div class="profile-npi">NPI: 1234567890</div>
+
+            <div class="section-label">Demographics</div>
+            <div class="kv"><span class="k">County</span><span class="v">Los Angeles</span></div>
+            <div class="kv"><span class="k">State</span><span class="v">CA</span></div>
+            <div class="kv"><span class="k">Office</span><span class="v">123 Medical Plaza, Ste 200</span></div>
+            <div class="kv"><span class="k">Phone</span><span class="v">(310) 555-0100</span></div>
+            <div class="kv"><span class="k">Email</span><span class="v">jsmith@abcmedical.com</span></div>
+
+            <div class="section-label">Credentials</div>
+            <div class="kv"><span class="k">Credentialing</span><span class="v"><span class="pill pill-success">● Active</span></span></div>
+            <div class="kv"><span class="k">Board Cert</span><span class="v">✓ Yes</span></div>
+            <div class="kv"><span class="k">License #</span><span class="v">G-112233</span></div>
+            <div class="kv"><span class="k">License Exp</span><span class="v">06/30/2028</span></div>
+
+            <div class="section-label">Group Affiliations</div>
+            <div class="kv"><span class="k">● ABC Medical Group (G001)</span><span class="v"><span class="pill pill-success">Active</span></span></div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Participation Panel -->
+        <div>
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3>Network Participation Assignments</h3>
+                <div class="sub">Effective 06/01/2026 · Last updated 2 minutes ago</div>
+              </div>
+              <button class="btn btn-primary" data-testid="add-participation-btn">+ Add Participation</button>
+            </div>
+            <div class="card-body" style="padding-top:8px;">
+
+              <table>
+                <thead>
+                  <tr><th>Network</th><th>Agreement</th><th>Effective Date</th><th>Status</th><th>Source</th><th>Actions</th></tr>
+                </thead>
+                <tbody>
+                  <tr class="row-new" data-testid="participation-row-PX001">
+                    <td data-testid="participation-network-PX001"><b>Medicare</b></td>
+                    <td>AGR100</td>
+                    <td>06/01/2026</td>
+                    <td data-testid="participation-status-PX001"><span class="pill pill-success">● Active</span></td>
+                    <td><span class="badge-uipath">🤖 UiPath Agent</span></td>
+                    <td style="white-space:nowrap;">
+                      <button class="btn" style="padding:5px 9px;" data-testid="edit-participation-PX001" title="Edit">✏️</button>
+                      <button class="btn" style="padding:5px 10px;" data-testid="terminate-participation-PX001">Terminate</button>
+                    </td>
+                  </tr>
+                  <tr class="row-new" data-testid="participation-row-PX002">
+                    <td data-testid="participation-network-PX002"><b>CCN</b></td>
+                    <td>AGR200</td>
+                    <td>06/01/2026</td>
+                    <td data-testid="participation-status-PX002"><span class="pill pill-success">● Active</span></td>
+                    <td><span class="badge-uipath">🤖 UiPath Agent</span></td>
+                    <td style="white-space:nowrap;">
+                      <button class="btn" style="padding:5px 9px;" data-testid="edit-participation-PX002" title="Edit">✏️</button>
+                      <button class="btn" style="padding:5px 10px;" data-testid="terminate-participation-PX002">Terminate</button>
+                    </td>
+                  </tr>
+                  <tr class="row-new" data-testid="participation-row-PX003">
+                    <td data-testid="participation-network-PX003"><b>Commercial PPO</b></td>
+                    <td>AGR300</td>
+                    <td>06/01/2026</td>
+                    <td data-testid="participation-status-PX003"><span class="pill pill-success">● Active</span></td>
+                    <td><span class="badge-uipath">🤖 UiPath Agent</span></td>
+                    <td style="white-space:nowrap;">
+                      <button class="btn" style="padding:5px 9px;" data-testid="edit-participation-PX003" title="Edit">✏️</button>
+                      <button class="btn" style="padding:5px 10px;" data-testid="terminate-participation-PX003">Terminate</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:14px;">
+            <div class="card-header">
+              <h3>Participation History</h3>
+              <button class="btn" style="padding:5px 12px;">Show History</button>
+            </div>
+          </div>
+
+          <!-- Add/Edit Participation form — same form reused for both actions
+               (shown expanded for design review) -->
+          <div class="card" style="margin-top:14px;">
+            <div class="card-header">
+              <div>
+                <h3>Add Participation</h3>
+                <div class="sub">Same form reused for Edit — opens pre-filled when ✏️ is clicked</div>
+              </div>
+            </div>
+            <div class="card-body" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+              <div>
+                <div class="section-label" style="margin-top:0;">Network</div>
+                <select data-testid="network-select" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;">
+                  <option>Medicare</option><option>CCN</option><option>COD</option><option>Commercial PPO</option>
+                </select>
+              </div>
+              <div>
+                <div class="section-label" style="margin-top:0;">Agreement ID</div>
+                <input data-testid="agreement-input" placeholder="AGR100" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;">
+              </div>
+              <div>
+                <div class="section-label" style="margin-top:0;">Effective Date</div>
+                <input data-testid="effective-date-input" type="date" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;">
+              </div>
+              <div>
+                <div class="section-label" style="margin-top:0;">Source</div>
+                <select style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;">
+                  <option>API</option><option>RPA</option><option>Manual</option>
+                </select>
+              </div>
+              <div style="grid-column:1 / -1;">
+                <button class="btn btn-primary" data-testid="submit-participation-btn">Submit</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast"><span class="dot"></span> Participation updated by UiPath Automation</div>
+
+</body>
+</html>

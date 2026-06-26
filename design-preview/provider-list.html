@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Providers — Provider Ops Simulator</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="sidebar-logo">Genzeon <span class="x">×</span> UiPath</div>
+    <nav class="nav">
+      <a href="dashboard.html">📊 Dashboard</a>
+      <a href="provider-list.html" class="active">👥 Providers</a>
+      <a href="audit-log.html">📋 Audit Log</a>
+    </nav>
+    <div class="demo-controls">
+      <div class="nav-section-label">Demo Controls</div>
+      <button class="btn-reset" data-testid="demo-reset-btn">🔄 Reset Demo</button>
+      <div class="scenario-dots">
+        <span class="dot"><span class="dot-indicator dot-complete"></span>A</span>
+        <span class="dot"><span class="dot-indicator dot-progress"></span>B</span>
+        <span class="dot"><span class="dot-indicator dot-ready"></span>C</span>
+        <span class="dot"><span class="dot-indicator dot-ready"></span>D</span>
+      </div>
+    </div>
+    <div class="sidebar-foot">Provider Ops Simulator<br>Demo v1.0</div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <div class="topbar-title">Providers</div>
+        <div class="topbar-breadcrumb">Home / Providers</div>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn btn-primary" data-testid="demo-reset-btn">🔄 Reset Demo</button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <div class="filter-bar">
+        <div class="search-wrap">
+          <span class="search-icon">🔎</span>
+          <input data-testid="provider-search-input" placeholder="Search by name, NPI, or specialty…">
+        </div>
+        <select data-testid="group-filter-select">
+          <option value="">All Groups</option>
+          <option>ABC Medical Group (G001)</option>
+          <option>Riverside Community Health (G002)</option>
+          <option>Inland Valley Medical Group (G003)</option>
+          <option>Desert Health Partners (G004)</option>
+          <option>Pacific Coast Medical Group (G005)</option>
+          <option value="VAL-20260901">Valley Medical Associates (G006) — Batch VAL-20260901</option>
+        </select>
+      </div>
+
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>Provider ID</th><th>Name</th><th>NPI</th><th>Specialty</th><th>County</th>
+              <th>Group</th><th>Credentialing</th><th>Networks</th><th>Last Updated</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr data-testid="provider-row-P001">
+              <td><span class="robot-dot" title="Updated by automation"></span> P001</td>
+              <td data-testid="provider-name-P001"><b>Dr. John Smith</b></td>
+              <td data-testid="provider-npi-P001" style="font-family:monospace;">1234567890</td>
+              <td>Cardiovascular Disease</td>
+              <td>Los Angeles</td>
+              <td>ABC Medical Group</td>
+              <td><span class="pill pill-success">● Active</span></td>
+              <td><span class="pill pill-blue">Medicare</span> <span class="pill pill-blue">CCN</span> <span class="pill pill-blue">Commercial PPO</span></td>
+              <td class="text-muted">2 min ago</td>
+              <td><button class="btn" style="padding:5px 12px;">View</button></td>
+            </tr>
+
+            <tr data-testid="provider-row-P002">
+              <td><span class="robot-dot"></span> P002</td>
+              <td data-testid="provider-name-P002"><b>Dr. Maria Lopez</b></td>
+              <td data-testid="provider-npi-P002" style="font-family:monospace;">9876543210</td>
+              <td>Internal Medicine</td>
+              <td>Riverside</td>
+              <td>Riverside Community Health <span class="pill pill-warning" style="margin-left:2px;">+1</span></td>
+              <td><span class="pill pill-success">● Active</span></td>
+              <td><span class="pill pill-blue">Commercial PPO</span></td>
+              <td class="text-muted">18 min ago</td>
+              <td><button class="btn" style="padding:5px 12px;">View</button></td>
+            </tr>
+
+            <tr data-testid="provider-row-P003">
+              <td>P003</td>
+              <td data-testid="provider-name-P003">Dr. Alan Carter</td>
+              <td data-testid="provider-npi-P003" style="font-family:monospace;">1122334455</td>
+              <td>Pediatrics</td>
+              <td>Orange</td>
+              <td>ABC Medical Group</td>
+              <td><span class="pill pill-success">● Active</span></td>
+              <td><span class="pill pill-blue">Medicare</span> <span class="pill pill-blue">CCN</span> <span class="pill pill-blue">Commercial PPO</span></td>
+              <td class="text-muted">3 days ago</td>
+              <td><button class="btn" style="padding:5px 12px;">View</button></td>
+            </tr>
+
+            <tr data-testid="provider-row-P004">
+              <td>P004</td>
+              <td data-testid="provider-name-P004">Dr. Sarah Nguyen</td>
+              <td data-testid="provider-npi-P004" style="font-family:monospace;">5544332211</td>
+              <td>Family Medicine</td>
+              <td>San Bernardino</td>
+              <td>Desert Health Partners</td>
+              <td><span class="pill pill-warning">● Pending</span></td>
+              <td><span class="text-muted">None</span></td>
+              <td class="text-muted">—</td>
+              <td><button class="btn" style="padding:5px 12px;">View</button></td>
+            </tr>
+
+            <tr data-testid="provider-row-P005">
+              <td>P005</td>
+              <td data-testid="provider-name-P005">Dr. Robert Kim</td>
+              <td data-testid="provider-npi-P005" style="font-family:monospace;">6677889900</td>
+              <td>Orthopedics</td>
+              <td>Los Angeles</td>
+              <td>Inland Valley Medical Group</td>
+              <td><span class="pill pill-success">● Active</span></td>
+              <td><span class="pill pill-blue">Commercial PPO</span></td>
+              <td class="text-muted">2 days ago</td>
+              <td><button class="btn" style="padding:5px 12px;">View</button></td>
+            </tr>
+
+            <tr data-testid="provider-row-P006">
+              <td>P006</td>
+              <td data-testid="provider-name-P006">Dr. Emily Chen</td>
+              <td data-testid="provider-npi-P006" style="font-family:monospace;">7788990011</td>
+              <td>Neurology</td>
+              <td>San Diego</td>
+              <td>Pacific Coast Medical Group</td>
+              <td><span class="pill pill-success">● Active</span></td>
+              <td><span class="pill pill-blue">Medicare</span> <span class="pill pill-danger">Commercial PPO</span></td>
+              <td class="text-muted">1 hr ago</td>
+              <td><button class="btn" style="padding:5px 12px;">View</button></td>
+            </tr>
+
+            <tr data-testid="provider-row-P007" class="border-left-teal" style="border-left:3px solid var(--sf-teal);">
+              <td>P007 <span class="pill pill-gray" style="margin-left:4px;">Batch</span></td>
+              <td data-testid="provider-name-P007">Dr. Robert Torres</td>
+              <td data-testid="provider-npi-P007" style="font-family:monospace;">2345678901</td>
+              <td>Cardiovascular Disease</td>
+              <td>Los Angeles</td>
+              <td>Valley Medical Associates</td>
+              <td><span class="pill pill-success">● Active</span></td>
+              <td><span class="pill pill-blue">Commercial PPO</span></td>
+              <td class="text-muted">5 days ago</td>
+              <td><button class="btn" style="padding:5px 12px;">View</button></td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+</body>
+</html>

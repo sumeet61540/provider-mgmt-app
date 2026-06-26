@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Audit Log — Provider Ops Simulator</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="sidebar-logo">Genzeon <span class="x">×</span> UiPath</div>
+    <nav class="nav">
+      <a href="dashboard.html">📊 Dashboard</a>
+      <a href="provider-list.html">👥 Providers</a>
+      <a href="audit-log.html" class="active">📋 Audit Log</a>
+    </nav>
+    <div class="demo-controls">
+      <div class="nav-section-label">Demo Controls</div>
+      <button class="btn-reset" data-testid="demo-reset-btn">🔄 Reset Demo</button>
+      <div class="scenario-dots">
+        <span class="dot"><span class="dot-indicator dot-complete"></span>A</span>
+        <span class="dot"><span class="dot-indicator dot-progress"></span>B</span>
+        <span class="dot"><span class="dot-indicator dot-ready"></span>C</span>
+        <span class="dot"><span class="dot-indicator dot-ready"></span>D</span>
+      </div>
+    </div>
+    <div class="sidebar-foot">Provider Ops Simulator<br>Demo v1.0</div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <div class="topbar-title">Audit Log</div>
+        <div class="topbar-breadcrumb">Home / Audit Log</div>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn">⬇ Export CSV</button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <div class="filter-bar">
+        <div class="search-wrap">
+          <span class="search-icon">🔎</span>
+          <input placeholder="Provider name or ID…">
+        </div>
+        <select><option>All Networks</option><option>Medicare</option><option>CCN</option><option>COD</option><option>Commercial PPO</option></select>
+        <select><option>All Actions</option><option>Add</option><option>Update</option><option>Terminate</option><option>GroupAdd</option></select>
+        <select><option>All Sources</option><option>UiPath Agent</option><option>UiPath RPA</option><option>Manual</option></select>
+        <select><option>All Scenarios</option><option>A</option><option>B</option><option>C</option><option>D</option></select>
+      </div>
+
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>Transaction ID</th><th>Timestamp</th><th>Provider</th><th>Action</th><th>Network</th>
+              <th>Effective Date</th><th>Performed By</th><th>Scenario</th><th></th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr class="border-left-green border-left-teal" data-testid="audit-row-TXN-1001">
+              <td style="font-family:monospace;font-size:12px;">TXN-1001</td>
+              <td class="text-muted">06/26 09:41</td>
+              <td><b>Dr. John Smith</b></td>
+              <td><span class="pill pill-success">Add</span></td>
+              <td><span class="pill pill-blue">Medicare</span></td>
+              <td>06/01/2026</td>
+              <td><span class="badge-uipath">🤖 UiPath Agent</span></td>
+              <td><span class="pill pill-gray">A</span></td>
+              <td><a class="row-link">Details ▾</a></td>
+            </tr>
+
+            <tr class="border-left-amber border-left-teal" data-testid="audit-row-TXN-1002">
+              <td style="font-family:monospace;font-size:12px;">TXN-1002</td>
+              <td class="text-muted">06/26 09:24</td>
+              <td><b>Dr. Maria Lopez</b></td>
+              <td><span class="pill pill-warning">Update</span></td>
+              <td><span class="pill pill-blue">Commercial PPO</span></td>
+              <td>07/01/2026</td>
+              <td><span class="badge-uipath rpa">🤖 UiPath RPA</span></td>
+              <td><span class="pill pill-gray">B</span></td>
+              <td><a class="row-link">Details ▾</a></td>
+            </tr>
+
+            <tr class="border-left-red" data-testid="audit-row-TXN-1003">
+              <td style="font-family:monospace;font-size:12px;">TXN-1003</td>
+              <td class="text-muted">06/26 08:58</td>
+              <td><b>Dr. Emily Chen</b></td>
+              <td><span class="pill pill-danger">Terminate</span></td>
+              <td><span class="pill pill-blue">Commercial PPO</span></td>
+              <td>06/30/2026</td>
+              <td><span class="badge-manual">Sarah Johnson</span></td>
+              <td><span class="pill pill-gray">C</span></td>
+              <td><a class="row-link">Details ▾</a></td>
+            </tr>
+
+            <tr class="border-left-green" data-testid="audit-row-TXN-1004">
+              <td style="font-family:monospace;font-size:12px;">TXN-1004</td>
+              <td class="text-muted">06/25 16:12</td>
+              <td><b>Dr. Alan Carter</b></td>
+              <td><span class="pill pill-success">Add</span></td>
+              <td><span class="pill pill-blue">Commercial PPO</span></td>
+              <td>06/15/2026</td>
+              <td><span class="badge-manual">Manual</span></td>
+              <td><span class="text-muted">—</span></td>
+              <td><a class="row-link">Details ▾</a></td>
+            </tr>
+
+            <!-- expanded detail example row -->
+            <tr>
+              <td colspan="9" style="background:#FAFBFC;padding:14px 22px;font-size:12.5px;">
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;">
+                  <div><span class="text-muted">Previous Status</span><br><b>None</b></div>
+                  <div><span class="text-muted">New Status</span><br><b>Active</b></div>
+                  <div><span class="text-muted">Work Item ID</span><br><b>WI-001</b></div>
+                  <div><span class="text-muted">Batch ID</span><br><b>—</b></div>
+                </div>
+                <div style="margin-top:8px;"><span class="text-muted">Notes</span><br>Added via UiPath Agent — Scenario A clean approval, confidence 95%.</div>
+              </td>
+            </tr>
+
+            <tr class="border-left-teal" data-testid="audit-row-TXN-0997">
+              <td style="font-family:monospace;font-size:12px;">TXN-0997</td>
+              <td class="text-muted">06/24 11:03</td>
+              <td><b>Dr. Robert Torres</b></td>
+              <td><span class="pill pill-success">GroupAdd</span></td>
+              <td><span class="pill pill-blue">Commercial PPO</span></td>
+              <td>09/01/2026</td>
+              <td><span class="badge-uipath">🤖 UiPath Agent</span></td>
+              <td><span class="pill pill-gray">D</span></td>
+              <td><a class="row-link">Details ▾</a></td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+</body>
+</html>

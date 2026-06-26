@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard — Provider Ops Simulator</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="sidebar-logo">Genzeon <span class="x">×</span> UiPath</div>
+    <nav class="nav">
+      <a href="dashboard.html" class="active">📊 Dashboard</a>
+      <a href="provider-list.html">👥 Providers</a>
+      <a href="audit-log.html">📋 Audit Log</a>
+    </nav>
+    <div class="demo-controls">
+      <div class="nav-section-label">Demo Controls</div>
+      <button class="btn-reset" data-testid="demo-reset-btn">🔄 Reset Demo</button>
+      <div class="scenario-dots">
+        <span class="dot"><span class="dot-indicator dot-complete"></span>A</span>
+        <span class="dot"><span class="dot-indicator dot-progress"></span>B</span>
+        <span class="dot"><span class="dot-indicator dot-ready"></span>C</span>
+        <span class="dot"><span class="dot-indicator dot-ready"></span>D</span>
+      </div>
+    </div>
+    <div class="sidebar-foot">Provider Ops Simulator<br>Demo v1.0</div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <div class="topbar-title">Dashboard</div>
+        <div class="topbar-breadcrumb">Home</div>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn">⬇ Export CSV</button>
+        <button class="btn btn-primary" data-testid="demo-reset-btn">🔄 Reset Demo</button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total Providers</div>
+          <div class="stat-value">11</div>
+          <div class="stat-foot">+0 today</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Active Participations</div>
+          <div class="stat-value">14</div>
+          <div class="stat-foot">across 4 networks</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Pending Updates</div>
+          <div class="stat-value">2</div>
+          <div class="stat-foot" style="color:var(--warning)">awaiting review</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Automation Actions Today</div>
+          <div class="stat-value">3</div>
+          <div class="stat-foot teal">🤖 UiPath Agent + RPA</div>
+        </div>
+      </div>
+
+      <div class="cols-60-40">
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>Recent Activity</h3>
+              <div class="sub">Last 10 audit log entries</div>
+            </div>
+          </div>
+          <div class="card-body" style="padding-top:6px;">
+
+            <div class="activity-item uipath">
+              <div class="activity-icon">➕</div>
+              <div style="flex:1;">
+                <div class="activity-title">Dr. John Smith added to Medicare, CCN, Commercial PPO</div>
+                <div class="activity-meta">2 minutes ago · <span class="badge-uipath">🤖 UiPath Agent</span></div>
+              </div>
+            </div>
+
+            <div class="activity-item uipath">
+              <div class="activity-icon">✏️</div>
+              <div style="flex:1;">
+                <div class="activity-title">Dr. Maria Lopez participation updated — Commercial PPO</div>
+                <div class="activity-meta">18 minutes ago · <span class="badge-uipath rpa">🤖 UiPath RPA</span></div>
+              </div>
+            </div>
+
+            <div class="activity-item">
+              <div class="activity-icon">🛑</div>
+              <div style="flex:1;">
+                <div class="activity-title">Dr. Emily Chen terminated from Commercial PPO</div>
+                <div class="activity-meta">1 hour ago · <span class="badge-manual">Manual</span></div>
+              </div>
+            </div>
+
+            <div class="activity-item">
+              <div class="activity-icon">➕</div>
+              <div style="flex:1;">
+                <div class="activity-title">Dr. Alan Carter added to Commercial PPO</div>
+                <div class="activity-meta">Yesterday · <span class="badge-manual">Manual</span></div>
+              </div>
+            </div>
+
+            <div class="activity-item">
+              <div class="activity-icon">✏️</div>
+              <div style="flex:1;">
+                <div class="activity-title">Dr. Robert Kim agreement renewed — Commercial PPO</div>
+                <div class="activity-meta">2 days ago · <span class="badge-manual">Manual</span></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:18px;">
+          <div class="card-header">
+            <h3>Network Coverage</h3>
+          </div>
+          <div class="card-body">
+            <table>
+              <tbody>
+                <tr><td><span class="pill pill-blue">Medicare</span></td><td style="text-align:right;font-weight:700;">4</td></tr>
+                <tr><td><span class="pill pill-blue">CCN</span></td><td style="text-align:right;font-weight:700;">2</td></tr>
+                <tr><td><span class="pill pill-blue">COD</span></td><td style="text-align:right;font-weight:700;">0</td></tr>
+                <tr><td><span class="pill pill-blue">Commercial PPO</span></td><td style="text-align:right;font-weight:700;">8</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="card" style="margin-top:18px;">
+        <div class="card-header">
+          <div>
+            <h3>Scenario Status</h3>
+            <div class="sub">Pre-demo state for each Blues Connect walkthrough</div>
+          </div>
+          <button class="btn" data-testid="demo-reset-btn">Reset All</button>
+        </div>
+        <div class="card-body">
+          <div class="scenario-grid">
+            <div class="scenario-card">
+              <div class="letter">A</div>
+              <div class="title">Network Add</div>
+              <div class="desc">Dr. John Smith — clean approval</div>
+              <span class="pill pill-success">Complete</span>
+            </div>
+            <div class="scenario-card">
+              <div class="letter">B</div>
+              <div class="title">Network Update</div>
+              <div class="desc">Dr. Maria Lopez — dual affiliation</div>
+              <span class="pill pill-warning">In Progress</span>
+            </div>
+            <div class="scenario-card">
+              <div class="letter">C</div>
+              <div class="title">Network Terminate</div>
+              <div class="desc">Dr. Emily Chen — Commercial PPO</div>
+              <span class="pill pill-gray">Ready</span>
+            </div>
+            <div class="scenario-card">
+              <div class="letter">D</div>
+              <div class="title">Group Mixed Request</div>
+              <div class="desc">Valley Medical Associates — 5 providers</div>
+              <span class="pill pill-gray">Ready</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</body>
+</html>
