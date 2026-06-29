@@ -59,6 +59,16 @@ class Network(Base):
     description = Column(String)
 
 
+class Crosswalk(Base):
+    __tablename__ = "crosswalk"
+
+    id = Column(Integer, primary_key=True)
+    group_id = Column(String, ForeignKey("groups.group_id"), nullable=False)
+    network_code = Column(String, ForeignKey("networks.network_code"), nullable=False)
+    agreement_id = Column(String, unique=True, nullable=False)
+    product_line = Column(String)
+
+
 class ProviderParticipation(Base):
     __tablename__ = "provider_participations"
 

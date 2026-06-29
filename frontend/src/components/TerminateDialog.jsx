@@ -6,7 +6,13 @@ export default function TerminateDialog({ participation, onClose, onTerminated }
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 
+  const minDate = participation.effective_date
+
   const handleConfirm = async () => {
+    if (minDate && terminationDate < minDate) {
+      setError(`Termination date cannot be before the effective date (${minDate}).`)
+      return
+    }
     setSaving(true)
     setError('')
     try {
@@ -35,10 +41,15 @@ export default function TerminateDialog({ participation, onClose, onTerminated }
         <input
           type="date"
           value={terminationDate}
-          onChange={(e) => setTerminationDate(e.target.value)}
+          min={minDate || undefined}
+          onChange={(e) => {
+            setTerminationDate(e.target.value)
+            setError('')
+          }}
           required
           className="w-full border border-gray-300 rounded-md px-2.5 py-2 text-sm"
         />
+        {minDate && <div className="text-xs text-gray-500 mt-1.5">Must be on or after the effective date ({minDate}).</div>}
         {error && <div className="text-sm text-red-600 mt-3">{error}</div>}
         <div className="flex justify-end gap-2 mt-5">
           <button

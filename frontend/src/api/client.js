@@ -26,6 +26,7 @@ export const api = {
   getBatch: (batchId) => client.get(`/participations/batch/${batchId}`).then((r) => r.data),
 
   listAudit: (params) => client.get('/audit', { params }).then((r) => r.data),
+  listCrosswalk: (params) => client.get('/crosswalk', { params }).then((r) => r.data),
 
   demoReset: () => client.post('/demo/reset').then((r) => r.data),
   demoResetProvider: (providerId) => client.post(`/demo/reset/${providerId}`).then((r) => r.data),

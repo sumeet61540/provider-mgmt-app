@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { LayoutDashboard, Users, ClipboardList, RotateCcw } from 'lucide-react'
+import { LayoutDashboard, Users, ClipboardList, RotateCcw, Link2 } from 'lucide-react'
 import api from '../api/client'
 import ResetConfirmModal from './ResetConfirmModal'
 
@@ -39,6 +39,9 @@ export default function Sidebar() {
         </NavLink>
         <NavLink to="/providers" className={navClass}>
           <Users size={16} /> Providers
+        </NavLink>
+        <NavLink to="/crosswalk" className={navClass}>
+          <Link2 size={16} /> Crosswalk
         </NavLink>
         <NavLink to="/audit" className={navClass}>
           <ClipboardList size={16} /> Audit Log

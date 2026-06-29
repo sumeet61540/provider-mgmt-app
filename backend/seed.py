@@ -21,6 +21,40 @@ NETWORKS = [
     ("Commercial PPO", "Commercial PPO", "Commercial PPO", "Statewide commercial PPO"),
 ]
 
+# Single source of truth for every valid (group, network) -> agreement
+# mapping. Both the pre-demo participations below AND the
+# add/update-participation validation in routers/participations.py read from
+# this — the agreement_id used anywhere in the app must trace back to a row
+# here, so there's no way for a participation's agreement to drift from what
+# the Crosswalk tab actually shows.
+# group_id, network_code, agreement_id, product_line
+CROSSWALK = [
+    ("G001", "Medicare", "AGR-G001-MCR", "MA"),
+    ("G001", "CCN", "AGR-G001-CCN", "Commercial HMO"),
+    ("G001", "COD", "AGR-G001-COD", "Commercial HMO"),
+    ("G001", "Commercial PPO", "AGR-G001-PPO", "Commercial PPO"),
+    ("G002", "Medicare", "AGR-G002-MCR", "MA"),
+    ("G002", "CCN", "AGR-G002-CCN", "Commercial HMO"),
+    ("G002", "Commercial PPO", "AGR-G002-PPO", "Commercial PPO"),
+    ("G003", "CCN", "AGR-G003-CCN", "Commercial HMO"),
+    ("G003", "Commercial PPO", "AGR-G003-PPO", "Commercial PPO"),
+    ("G004", "Commercial PPO", "AGR-G004-PPO", "Commercial PPO"),
+    ("G005", "Medicare", "AGR-G005-MCR", "MA"),
+    ("G005", "Commercial PPO", "AGR-G005-PPO", "Commercial PPO"),
+    ("G006", "CCN", "AGR-G006-CCN", "Commercial HMO"),
+    ("G006", "Commercial PPO", "AGR-G006-PPO", "Commercial PPO"),
+]
+
+
+def agreement_for(group_id: str, network_code: str) -> str:
+    """Look up the crosswalk agreement_id for a (group, network) pair.
+    Raises if the combo isn't on file — pre-demo data must only reference
+    combos that actually exist in CROSSWALK."""
+    for g, n, agreement_id, _ in CROSSWALK:
+        if g == group_id and n == network_code:
+            return agreement_id
+    raise ValueError(f"No crosswalk entry for group={group_id} network={network_code}")
+
 # provider_id, name, npi, specialty, county, credentialing_status, board_certified
 PROVIDERS = [
     ("P001", "Dr. John Smith", "1234567890", "Cardiovascular Disease", "Los Angeles", "Active", True),
@@ -77,25 +111,27 @@ DEMOGRAPHICS = {
                  email="mchang@valleymedical.com", license_number="G-115566", license_expiration=date(2029, 8, 2)),
 }
 
-# Pre-demo participations: provider_id, network_code, agreement_id, effective_date, group_id (for agreement naming)
+# Pre-demo participations: provider_id, group_id (which crosswalk agreement
+# applies), network_code, effective_date. agreement_id is resolved from
+# CROSSWALK at seed time via agreement_for() — never hardcoded here.
 PRE_DEMO_PARTICIPATIONS = [
     # P001 (Dr. John Smith) -> none yet; Scenario A will add Medicare/CCN/Commercial PPO
     # P002 (Dr. Maria Lopez) -> Commercial PPO only; Scenario B updates it (exception: dual affiliation)
-    ("P002", "Commercial PPO", "AGR-G002-PPO", date(2025, 1, 1)),
+    ("P002", "G002", "Commercial PPO", date(2025, 1, 1)),
     # P003 (Dr. Alan Carter) -> fully assigned
-    ("P003", "Medicare", "AGR-G001-MCR", date(2024, 6, 1)),
-    ("P003", "CCN", "AGR-G001-CCN", date(2024, 6, 1)),
-    ("P003", "Commercial PPO", "AGR-G001-PPO", date(2024, 6, 1)),
+    ("P003", "G001", "Medicare", date(2024, 6, 1)),
+    ("P003", "G001", "CCN", date(2024, 6, 1)),
+    ("P003", "G001", "Commercial PPO", date(2024, 6, 1)),
     # P004 (Dr. Sarah Nguyen) -> none, credentialing pending
     # P005 (Dr. Robert Kim)
-    ("P005", "Commercial PPO", "AGR-G003-PPO", date(2024, 9, 1)),
+    ("P005", "G003", "Commercial PPO", date(2024, 9, 1)),
     # P006 (Dr. Emily Chen) -> Medicare + Commercial PPO; Scenario C terminates Commercial PPO
-    ("P006", "Medicare", "AGR-G005-MCR", date(2024, 3, 1)),
-    ("P006", "Commercial PPO", "AGR-G005-PPO", date(2024, 3, 1)),
+    ("P006", "G005", "Medicare", date(2024, 3, 1)),
+    ("P006", "G005", "Commercial PPO", date(2024, 3, 1)),
     # P007-P011 (Valley Medical) -> vary, for Scenario D group mixed request
-    ("P007", "Commercial PPO", "AGR-G006-PPO", date(2025, 2, 1)),
-    ("P008", "Commercial PPO", "AGR-G006-PPO", date(2025, 2, 1)),
-    ("P010", "Commercial PPO", "AGR-G006-PPO", date(2025, 2, 1)),
+    ("P007", "G006", "Commercial PPO", date(2025, 2, 1)),
+    ("P008", "G006", "Commercial PPO", date(2025, 2, 1)),
+    ("P010", "G006", "Commercial PPO", date(2025, 2, 1)),
     # P009, P011 -> none yet (Scenario D will add them)
 ]
 
@@ -110,6 +146,11 @@ def _seed_reference_data(db: Session):
         for code, name, product_line, description in NETWORKS:
             db.add(models.Network(network_code=code, network_name=name,
                                    product_line=product_line, description=description))
+
+    if db.query(models.Crosswalk).count() == 0:
+        for group_id, network_code, agreement_id, product_line in CROSSWALK:
+            db.add(models.Crosswalk(group_id=group_id, network_code=network_code,
+                                     agreement_id=agreement_id, product_line=product_line))
 
     if db.query(models.Provider).count() == 0:
         for provider_id, name, npi, specialty, county, status, board_cert in PROVIDERS:
@@ -135,12 +176,12 @@ def _seed_reference_data(db: Session):
 
 def seed_pre_demo_participations(db: Session):
     """(Re)create the pre-demo participation state. Used on first boot AND by /demo/reset."""
-    for provider_id, network_code, agreement_id, effective_date in PRE_DEMO_PARTICIPATIONS:
+    for provider_id, group_id, network_code, effective_date in PRE_DEMO_PARTICIPATIONS:
         db.add(models.ProviderParticipation(
             participation_id=str(uuid.uuid4()),
             provider_id=provider_id,
             network_code=network_code,
-            agreement_id=agreement_id,
+            agreement_id=agreement_for(group_id, network_code),
             effective_date=effective_date,
             status="Active",
             source="Manual",

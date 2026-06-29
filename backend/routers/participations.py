@@ -29,6 +29,46 @@ def _get_participation_or_404(db: Session, participation_id: str) -> models.Prov
     return participation
 
 
+def _validate_agreement(db: Session, provider: models.Provider, network_code: str, agreement_id: str | None):
+    """An agreement_id, if given, must belong to the requested network AND to
+    one of the provider's active groups — same crosswalk join the Crosswalk
+    tab displays, just enforced here instead of left to free text."""
+    if not agreement_id:
+        return
+
+    crosswalk_row = (
+        db.query(models.Crosswalk)
+        .filter(models.Crosswalk.agreement_id == agreement_id, models.Crosswalk.network_code == network_code)
+        .first()
+    )
+    if not crosswalk_row:
+        raise HTTPException(
+            status_code=422,
+            detail=f"Agreement '{agreement_id}' is not a valid agreement for network '{network_code}'.",
+        )
+
+    active_group_ids = {
+        aff.group_id
+        for aff in db.query(models.ProviderGroupAffiliation)
+        .filter(models.ProviderGroupAffiliation.provider_id == provider.provider_id,
+                 models.ProviderGroupAffiliation.status == "Active")
+        .all()
+    }
+    if crosswalk_row.group_id not in active_group_ids:
+        valid = (
+            db.query(models.Crosswalk.agreement_id)
+            .filter(models.Crosswalk.network_code == network_code, models.Crosswalk.group_id.in_(active_group_ids))
+            .all()
+        )
+        valid_ids = [v[0] for v in valid]
+        hint = f"Valid options for {provider.provider_name}: {', '.join(valid_ids)}" if valid_ids else \
+            f"{provider.provider_name}'s group(s) have no agreement on file for network '{network_code}'."
+        raise HTTPException(
+            status_code=422,
+            detail=f"Agreement '{agreement_id}' does not belong to {provider.provider_name}'s group(s). {hint}",
+        )
+
+
 @router.get("/providers/{provider_id}/participations", response_model=list[schemas.ParticipationOut])
 def list_participations(provider_id: str, db: Session = Depends(get_db)):
     _get_provider_or_404(db, provider_id)
@@ -46,6 +86,8 @@ def add_participation(provider_id: str, payload: schemas.ParticipationCreate, db
 
     if not db.query(models.Network).filter(models.Network.network_code == payload.network_code).first():
         raise HTTPException(status_code=422, detail=f"Unknown network_code: {payload.network_code}")
+
+    _validate_agreement(db, provider, payload.network_code, payload.agreement_id)
 
     participation = models.ProviderParticipation(
         participation_id=str(uuid.uuid4()),
@@ -77,6 +119,9 @@ def update_participation(participation_id: str, payload: schemas.ParticipationUp
     provider = _get_provider_or_404(db, participation.provider_id)
     previous_status = participation.status
 
+    if payload.agreement_id:
+        _validate_agreement(db, provider, participation.network_code, payload.agreement_id)
+
     for field, value in payload.model_dump(exclude_unset=True, exclude={"analyst_name", "notes", "source"}).items():
         setattr(participation, field, value)
     source = payload.source or "Manual"
@@ -99,6 +144,13 @@ def terminate_participation(participation_id: str, payload: schemas.Participatio
     participation = _get_participation_or_404(db, participation_id)
     provider = _get_provider_or_404(db, participation.provider_id)
     previous_status = participation.status
+
+    if participation.effective_date and payload.termination_date < participation.effective_date:
+        raise HTTPException(
+            status_code=422,
+            detail=f"Termination date ({payload.termination_date}) cannot be before the "
+                    f"effective date ({participation.effective_date}).",
+        )
 
     participation.status = "Terminated"
     participation.termination_date = payload.termination_date

@@ -33,12 +33,12 @@ def _reset_providers(db: Session, provider_ids: list[str]):
     db.commit()
 
     rows = [row for row in seed.PRE_DEMO_PARTICIPATIONS if row[0] in provider_ids]
-    for provider_id, network_code, agreement_id, effective_date in rows:
+    for provider_id, group_id, network_code, effective_date in rows:
         import uuid as _uuid
         db.add(models.ProviderParticipation(
             participation_id=str(_uuid.uuid4()),
             provider_id=provider_id, network_code=network_code,
-            agreement_id=agreement_id, effective_date=effective_date,
+            agreement_id=seed.agreement_for(group_id, network_code), effective_date=effective_date,
             status="Active", source="Manual",
         ))
     db.commit()

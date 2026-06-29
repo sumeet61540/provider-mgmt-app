@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 import models
 import seed
 from database import Base, engine, get_db
-from routers import audit, demo, participations, providers
+from routers import audit, crosswalk, demo, participations, providers
 
 logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"))
 logger = logging.getLogger("provider-mgmt")
@@ -29,6 +29,7 @@ app.include_router(providers.router, prefix="/api/v1")
 app.include_router(participations.router, prefix="/api/v1")
 app.include_router(audit.router, prefix="/api/v1")
 app.include_router(demo.router, prefix="/api/v1")
+app.include_router(crosswalk.router, prefix="/api/v1")
 
 
 @app.on_event("startup")

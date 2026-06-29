@@ -4,4 +4,5 @@ __pycache__/
 backend/data/
 node_modules/
 frontend/dist/
+frontend/*.log
 .DS_Store

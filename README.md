@@ -85,6 +85,23 @@ on Provider Detail, click `Add Participation` (or the row's ✏️ to edit, or
 input bound to the same API calls a human analyst's clicks trigger; the bot
 just sets Source = RPA instead of Manual.
 
+Note: `agreement-input` is a `<select>`, not a free-text field — it only
+lists agreements valid for the chosen network and the provider's group(s)
+(see Crosswalk below), so the bot picks an option rather than typing a
+value.
+
+## Network ↔ Agreement Crosswalk
+
+The Crosswalk tab (`/crosswalk`, `GET /api/v1/crosswalk`) shows which
+Agreement ID applies to which Network for each Group — the same mapping the
+Add/Edit Participation form's Agreement dropdown is filtered by. The backend
+rejects (`422`) any `agreement_id` that doesn't belong to both the requested
+`network_code` and one of the provider's active group affiliations, so a
+participation's agreement can never drift from what this tab shows. A
+dual-affiliated provider (e.g. Dr. Maria Lopez, P002) will show agreement
+options from both her groups for the same network — that ambiguity is
+intentional, it's what Scenario B's exception is about.
+
 ## Deployment
 
 `backend/railway.json` and both services' `Dockerfile`s are included for a

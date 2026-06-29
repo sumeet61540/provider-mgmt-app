@@ -4,6 +4,7 @@ import { ToastProvider } from './components/Toast.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 import ProviderList from './pages/ProviderList.jsx'
 import ProviderDetail from './pages/ProviderDetail.jsx'
+import Crosswalk from './pages/Crosswalk.jsx'
 import AuditLog from './pages/AuditLog.jsx'
 
 export default function App() {
@@ -17,6 +18,7 @@ export default function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/providers" element={<ProviderList />} />
             <Route path="/providers/:providerId" element={<ProviderDetail />} />
+            <Route path="/crosswalk" element={<Crosswalk />} />
             <Route path="/audit" element={<AuditLog />} />
           </Routes>
         </div>

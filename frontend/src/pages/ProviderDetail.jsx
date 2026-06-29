@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import api from '../api/client'
 import TopBar from '../components/TopBar.jsx'
@@ -7,6 +7,7 @@ import { StatusPill, SourceBadge } from '../components/Badges.jsx'
 import { useToast } from '../components/Toast.jsx'
 import ParticipationForm from '../components/ParticipationForm.jsx'
 import TerminateDialog from '../components/TerminateDialog.jsx'
+import ResetConfirmModal from '../components/ResetConfirmModal.jsx'
 
 const NETWORK_CODES = ['Medicare', 'CCN', 'COD', 'Commercial PPO']
 
@@ -18,6 +19,7 @@ export default function ProviderDetail() {
   const [showHistory, setShowHistory] = useState(false)
   const [formState, setFormState] = useState(null) // { mode: 'add' } | { mode: 'edit', participation }
   const [terminateTarget, setTerminateTarget] = useState(null)
+  const [showResetProvider, setShowResetProvider] = useState(false)
   const [flashIds, setFlashIds] = useState(new Set())
   const knownIds = useRef(new Set())
   const firstLoad = useRef(true)
@@ -52,7 +54,7 @@ export default function ProviderDetail() {
   if (isLoading || !provider) {
     return (
       <>
-        <TopBar title="Loading…" breadcrumb={`Home / Providers / ${providerId}`} />
+        <TopBar title="Loading…" backTo="/providers" breadcrumb={`Home / Providers / ${providerId}`} />
         <div className="p-7 text-gray-500">Loading provider…</div>
       </>
     )
@@ -74,11 +76,26 @@ export default function ProviderDetail() {
     <>
       <TopBar
         title={provider.provider_name}
-        breadcrumb={`Home / Providers / ${provider.provider_id}`}
+        backTo="/providers"
+        breadcrumb={
+          <>
+            <Link to="/dashboard" className="hover:text-sf-blue hover:underline">Home</Link>
+            {' / '}
+            <Link to="/providers" className="hover:text-sf-blue hover:underline">Providers</Link>
+            {` / ${provider.provider_id}`}
+          </>
+        }
         actions={
           <>
             <span className="w-1.5 h-1.5 rounded-full bg-green-700 live-dot inline-block" />
-            <span className="text-[12.5px] text-gray-500">Live · polling every 5s</span>
+            <span className="text-[12.5px] text-gray-500 mr-2">Live · polling every 5s</span>
+            <button
+              data-testid="reset-provider-btn"
+              onClick={() => setShowResetProvider(true)}
+              className="px-3 py-2 rounded-md border border-gray-300 text-[12.5px] font-semibold"
+            >
+              🔄 Reset This Provider
+            </button>
           </>
         }
       />
@@ -247,6 +264,7 @@ export default function ProviderDetail() {
         <ParticipationForm
           mode={formState.mode}
           providerId={provider.provider_id}
+          groupIds={provider.group_affiliations.filter((g) => g.status === 'Active').map((g) => g.group_id)}
           participation={formState.participation}
           networkCodes={NETWORK_CODES}
           onClose={() => setFormState(null)}
@@ -266,6 +284,10 @@ export default function ProviderDetail() {
             setTerminateTarget(null)
           }}
         />
+      )}
+
+      {showResetProvider && (
+        <ResetConfirmModal providerId={provider.provider_id} onClose={() => setShowResetProvider(false)} />
       )}
     </>
   )

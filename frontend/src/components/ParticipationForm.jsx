@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import api from '../api/client'
 
-export default function ParticipationForm({ mode, providerId, participation, networkCodes, onClose, onSaved }) {
+export default function ParticipationForm({ mode, providerId, groupIds, participation, networkCodes, onClose, onSaved }) {
   const isEdit = mode === 'edit'
   const [networkCode, setNetworkCode] = useState(participation?.network_code || networkCodes[0])
   const [agreementId, setAgreementId] = useState(participation?.agreement_id || '')
@@ -9,6 +10,23 @@ export default function ParticipationForm({ mode, providerId, participation, net
   const [source, setSource] = useState(participation?.source === 'RPA' ? 'RPA' : 'Manual')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+
+  const { data: crosswalk = [] } = useQuery({ queryKey: ['crosswalk'], queryFn: () => api.listCrosswalk({}) })
+
+  // Agreements valid for the selected network AND one of this provider's
+  // active groups — the same join the backend enforces on submit, so the
+  // dropdown can never offer a combination the server would reject.
+  const validAgreements = crosswalk.filter(
+    (row) => row.network_code === networkCode && (groupIds || []).includes(row.group_id)
+  )
+
+  useEffect(() => {
+    if (isEdit) return // network is fixed in edit mode; keep the existing agreement selected
+    if (!validAgreements.some((a) => a.agreement_id === agreementId)) {
+      setAgreementId(validAgreements[0]?.agreement_id || '')
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [networkCode, crosswalk])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -61,14 +79,26 @@ export default function ParticipationForm({ mode, providerId, participation, net
           </div>
           <div>
             <label className="text-[11px] uppercase tracking-wide text-gray-500 font-bold block mb-1.5">Agreement ID</label>
-            <input
-              data-testid="agreement-input"
-              value={agreementId}
-              onChange={(e) => setAgreementId(e.target.value)}
-              placeholder="AGR100"
-              required
-              className="w-full border border-gray-300 rounded-md px-2.5 py-2 text-sm"
-            />
+            {validAgreements.length > 0 ? (
+              <select
+                data-testid="agreement-input"
+                value={agreementId}
+                onChange={(e) => setAgreementId(e.target.value)}
+                required
+                className="w-full border border-gray-300 rounded-md px-2.5 py-2 text-sm"
+              >
+                {!isEdit && <option value="">Select an agreement…</option>}
+                {validAgreements.map((a) => (
+                  <option key={a.agreement_id} value={a.agreement_id}>
+                    {a.agreement_id} — {a.group_name}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <div data-testid="agreement-input" className="text-xs text-orange-700 bg-orange-50 border border-orange-200 rounded-md px-2.5 py-2">
+                No agreement on file for {networkCode} for this provider's group(s).
+              </div>
+            )}
           </div>
           <div>
             <label className="text-[11px] uppercase tracking-wide text-gray-500 font-bold block mb-1.5">Effective Date</label>
@@ -109,7 +139,7 @@ export default function ParticipationForm({ mode, providerId, participation, net
           <button
             type="submit"
             data-testid="submit-participation-btn"
-            disabled={saving}
+            disabled={saving || !agreementId}
             className="px-4 py-2 rounded-md bg-sf-blue text-white text-sm font-semibold disabled:opacity-60"
           >
             {saving ? 'Saving…' : 'Submit'}

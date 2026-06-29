@@ -115,6 +115,15 @@ class AuditLogOut(BaseModel):
         from_attributes = True
 
 
+class CrosswalkOut(BaseModel):
+    group_id: str
+    group_name: str
+    network_code: str
+    network_name: str
+    agreement_id: str
+    product_line: Optional[str]
+
+
 class DemoStatusOut(BaseModel):
     scenario: str
     label: str
