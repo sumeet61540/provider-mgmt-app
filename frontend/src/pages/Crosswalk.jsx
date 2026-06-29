@@ -61,8 +61,8 @@ export default function Crosswalk() {
           </select>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
-          <table className="w-full text-sm">
+        <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-x-auto">
+          <table className="w-full min-w-[600px] text-sm">
             <thead>
               <tr className="bg-gray-50 text-gray-500 text-[11.5px] uppercase tracking-wide font-bold">
                 <th className="text-left px-3.5 py-2.5">Group</th>
