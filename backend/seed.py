@@ -124,7 +124,7 @@ ELIGIBILITY_RULES = [
     ("R005", "Medicare", "Geography", "county in: Los Angeles, Riverside, Orange, San Bernardino", "Exclude", "Broader Medicare footprint"),
     ("R006", "Commercial PPO", "Geography", "All counties (statewide)", "N/A", "Statewide PPO"),
     ("R007", "All Networks", "Agreement", "Active and not expiring within 30 days of effective_date", "ExceptionFlag", "Triggers manual review"),
-    ("R008", "All Networks", "DualAffiliation", "Provider has more than one group affiliation", "ExceptionFlag", "Agent cannot auto-resolve"),
+    ("R008", "All Networks", "DualAffiliation", "Provider must have only one active group affiliation", "ExceptionFlag", "Dual affiliation — agent cannot auto-resolve which group's agreement applies"),
     ("R009", "Medicare", "Specialty", "All specialties eligible", "N/A", "No specialty restriction"),
     ("R010", "Commercial PPO", "Specialty", "All specialties eligible", "N/A", "Open specialty PPO"),
 ]
