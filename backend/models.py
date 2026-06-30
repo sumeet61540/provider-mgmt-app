@@ -86,6 +86,18 @@ class ProviderParticipation(Base):
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
 
 
+class NetworkEligibilityRule(Base):
+    __tablename__ = "network_eligibility_rules"
+
+    id = Column(Integer, primary_key=True)
+    rule_id = Column(String, unique=True, nullable=False)
+    network_name = Column(String, nullable=False)
+    rule_type = Column(String, nullable=False)
+    rule_value = Column(String)
+    action_if_fails = Column(String)
+    notes = Column(String)
+
+
 class AuditLog(Base):
     __tablename__ = "audit_log"
 

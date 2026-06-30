@@ -124,6 +124,67 @@ class CrosswalkOut(BaseModel):
     product_line: Optional[str]
 
 
+class GroupOut(BaseModel):
+    group_id: str
+    group_name: str
+    tax_id: Optional[str]
+    status: str
+
+    class Config:
+        from_attributes = True
+
+
+class NetworkOut(BaseModel):
+    network_code: str
+    network_name: str
+    product_line: Optional[str]
+    description: Optional[str]
+
+    class Config:
+        from_attributes = True
+
+
+class AffiliationOut(BaseModel):
+    provider_id: str
+    provider_name: str
+    npi: str
+    group_id: str
+    group_name: str
+    effective_date: Optional[date]
+    status: str
+
+
+class ParticipationAllOut(BaseModel):
+    participation_id: str
+    provider_id: str
+    provider_name: str
+    npi: str
+    network_code: str
+    agreement_id: Optional[str]
+    effective_date: Optional[date]
+    termination_date: Optional[date]
+    status: str
+    source: str
+    batch_id: Optional[str]
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class EligibilityRuleOut(BaseModel):
+    rule_id: str
+    network_name: str
+    rule_type: str
+    rule_value: Optional[str]
+    action_if_fails: Optional[str]
+    notes: Optional[str]
+
+    class Config:
+        from_attributes = True
+
+
 class DemoStatusOut(BaseModel):
     scenario: str
     label: str

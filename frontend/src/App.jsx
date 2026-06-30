@@ -4,8 +4,13 @@ import { ToastProvider } from './components/Toast.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 import ProviderList from './pages/ProviderList.jsx'
 import ProviderDetail from './pages/ProviderDetail.jsx'
-import Crosswalk from './pages/Crosswalk.jsx'
 import AuditLog from './pages/AuditLog.jsx'
+import Crosswalk from './pages/Crosswalk.jsx'
+import DataGroups from './pages/data/DataGroups.jsx'
+import DataNetworks from './pages/data/DataNetworks.jsx'
+import DataAffiliations from './pages/data/DataAffiliations.jsx'
+import DataParticipations from './pages/data/DataParticipations.jsx'
+import DataRules from './pages/data/DataRules.jsx'
 
 export default function App() {
   return (
@@ -18,8 +23,16 @@ export default function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/providers" element={<ProviderList />} />
             <Route path="/providers/:providerId" element={<ProviderDetail />} />
-            <Route path="/crosswalk" element={<Crosswalk />} />
             <Route path="/audit" element={<AuditLog />} />
+            {/* /crosswalk redirect — preserves any bookmarks to the old URL */}
+            <Route path="/crosswalk" element={<Navigate to="/data/crosswalk" replace />} />
+            {/* Data section */}
+            <Route path="/data/groups" element={<DataGroups />} />
+            <Route path="/data/networks" element={<DataNetworks />} />
+            <Route path="/data/affiliations" element={<DataAffiliations />} />
+            <Route path="/data/crosswalk" element={<Crosswalk />} />
+            <Route path="/data/participations" element={<DataParticipations />} />
+            <Route path="/data/rules" element={<DataRules />} />
           </Routes>
         </div>
       </div>

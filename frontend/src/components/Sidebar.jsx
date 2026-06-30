@@ -1,7 +1,11 @@
 import { NavLink } from 'react-router-dom'
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { LayoutDashboard, Users, ClipboardList, RotateCcw, Link2 } from 'lucide-react'
+import {
+  LayoutDashboard, Users, ClipboardList, RotateCcw,
+  Database, ChevronDown, ChevronRight,
+  Building2, Network, Link2, UserCheck, ListChecks, ShieldCheck,
+} from 'lucide-react'
 import api from '../api/client'
 import ResetConfirmModal from './ResetConfirmModal'
 
@@ -13,6 +17,7 @@ const dotClass = {
 
 export default function Sidebar() {
   const [showReset, setShowReset] = useState(false)
+  const [isDataOpen, setIsDataOpen] = useState(true)
 
   const { data: status } = useQuery({
     queryKey: ['demo-status'],
@@ -27,9 +32,16 @@ export default function Sidebar() {
         : 'border-transparent text-white/80 hover:bg-white/5'
     }`
 
+  const subNavClass = ({ isActive }) =>
+    `flex items-center gap-2 pl-7 pr-3 py-2 rounded-md text-[12.5px] font-medium mb-0.5 border-l-[3px] ${
+      isActive
+        ? 'bg-sf-teal/15 border-sf-teal text-white font-semibold'
+        : 'border-transparent text-white/65 hover:bg-white/5'
+    }`
+
   return (
-    <aside className="w-60 shrink-0 bg-sf-dark text-white flex flex-col sticky top-0 h-screen">
-      <div className="px-5 py-5 pb-4 font-extrabold text-[15px] border-b border-white/10 flex items-center gap-2">
+    <aside className="w-60 shrink-0 bg-sf-dark text-white flex flex-col sticky top-0 h-screen overflow-y-auto">
+      <div className="px-5 py-5 pb-4 font-extrabold text-[15px] border-b border-white/10 flex items-center gap-2 shrink-0">
         Genzeon <span className="text-white/40 font-normal">×</span> UiPath
       </div>
 
@@ -40,15 +52,50 @@ export default function Sidebar() {
         <NavLink to="/providers" className={navClass}>
           <Users size={16} /> Providers
         </NavLink>
-        <NavLink to="/crosswalk" className={navClass}>
-          <Link2 size={16} /> Crosswalk
-        </NavLink>
+
+        {/* Collapsible Data section */}
+        <button
+          onClick={() => setIsDataOpen((v) => !v)}
+          className="w-full flex items-center justify-between px-3 py-2.5 rounded-md text-[13.5px] font-medium mb-0.5 border-l-[3px] border-transparent text-white/80 hover:bg-white/5"
+        >
+          <span className="flex items-center gap-2.5">
+            <Database size={16} /> Data
+          </span>
+          {isDataOpen ? <ChevronDown size={14} className="text-white/50" /> : <ChevronRight size={14} className="text-white/50" />}
+        </button>
+
+        {isDataOpen && (
+          <div className="mb-1">
+            <NavLink to="/providers" end className={subNavClass}>
+              <Users size={13} /> Providers
+            </NavLink>
+            <NavLink to="/data/groups" className={subNavClass}>
+              <Building2 size={13} /> Groups
+            </NavLink>
+            <NavLink to="/data/networks" className={subNavClass}>
+              <Network size={13} /> Networks
+            </NavLink>
+            <NavLink to="/data/affiliations" className={subNavClass}>
+              <UserCheck size={13} /> Affiliations
+            </NavLink>
+            <NavLink to="/data/crosswalk" className={subNavClass}>
+              <Link2 size={13} /> Crosswalk
+            </NavLink>
+            <NavLink to="/data/participations" className={subNavClass}>
+              <ListChecks size={13} /> Participations
+            </NavLink>
+            <NavLink to="/data/rules" className={subNavClass}>
+              <ShieldCheck size={13} /> Eligibility Rules
+            </NavLink>
+          </div>
+        )}
+
         <NavLink to="/audit" className={navClass}>
           <ClipboardList size={16} /> Audit Log
         </NavLink>
       </nav>
 
-      <div className="p-2.5 border-t border-white/10">
+      <div className="p-2.5 border-t border-white/10 shrink-0">
         <div className="text-[10.5px] uppercase tracking-wider text-white/40 px-3 pt-1 pb-1.5">
           Demo Controls
         </div>
@@ -69,7 +116,7 @@ export default function Sidebar() {
         </div>
       </div>
 
-      <div className="px-4 py-4 text-[11px] text-white/40 border-t border-white/10">
+      <div className="px-4 py-4 text-[11px] text-white/40 border-t border-white/10 shrink-0">
         Provider Ops Simulator
         <br />
         Demo v1.0

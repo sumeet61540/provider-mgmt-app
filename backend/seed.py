@@ -114,6 +114,22 @@ DEMOGRAPHICS = {
 # Pre-demo participations: provider_id, group_id (which crosswalk agreement
 # applies), network_code, effective_date. agreement_id is resolved from
 # CROSSWALK at seed time via agreement_for() — never hardcoded here.
+# Network eligibility rules from UIPATH_BUILD_STEPS.md Appendix B.
+# rule_id, network_name, rule_type, rule_value, action_if_fails, notes
+ELIGIBILITY_RULES = [
+    ("R001", "COD", "Specialty", "PCP Only: Family Medicine, Internal Medicine, Pediatrics", "Exclude", "COD is PCP-only"),
+    ("R002", "Medicare", "Credentialing", "credentialing_status must be Active", "Exclude", "CMS requirement"),
+    ("R003", "CCN", "BoardCertification", "board_certified must be True", "Exclude", "CCN quality standard"),
+    ("R004", "CCN", "Geography", "county in: Los Angeles, Riverside, Orange", "Exclude", "CCN regional network"),
+    ("R005", "Medicare", "Geography", "county in: Los Angeles, Riverside, Orange, San Bernardino", "Exclude", "Broader Medicare footprint"),
+    ("R006", "Commercial PPO", "Geography", "All counties (statewide)", "N/A", "Statewide PPO"),
+    ("R007", "All Networks", "Agreement", "Active and not expiring within 30 days of effective_date", "ExceptionFlag", "Triggers manual review"),
+    ("R008", "All Networks", "DualAffiliation", "Provider has more than one group affiliation", "ExceptionFlag", "Agent cannot auto-resolve"),
+    ("R009", "Medicare", "Specialty", "All specialties eligible", "N/A", "No specialty restriction"),
+    ("R010", "Commercial PPO", "Specialty", "All specialties eligible", "N/A", "Open specialty PPO"),
+]
+
+
 PRE_DEMO_PARTICIPATIONS = [
     # P001 (Dr. John Smith) -> none yet; Scenario A will add Medicare/CCN/Commercial PPO
     # P002 (Dr. Maria Lopez) -> Commercial PPO only; Scenario B updates it (exception: dual affiliation)
@@ -151,6 +167,13 @@ def _seed_reference_data(db: Session):
         for group_id, network_code, agreement_id, product_line in CROSSWALK:
             db.add(models.Crosswalk(group_id=group_id, network_code=network_code,
                                      agreement_id=agreement_id, product_line=product_line))
+
+    if db.query(models.NetworkEligibilityRule).count() == 0:
+        for rule_id, network_name, rule_type, rule_value, action_if_fails, notes in ELIGIBILITY_RULES:
+            db.add(models.NetworkEligibilityRule(
+                rule_id=rule_id, network_name=network_name, rule_type=rule_type,
+                rule_value=rule_value, action_if_fails=action_if_fails, notes=notes,
+            ))
 
     if db.query(models.Provider).count() == 0:
         for provider_id, name, npi, specialty, county, status, board_cert in PROVIDERS:

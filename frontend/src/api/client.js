@@ -27,6 +27,11 @@ export const api = {
 
   listAudit: (params) => client.get('/audit', { params }).then((r) => r.data),
   listCrosswalk: (params) => client.get('/crosswalk', { params }).then((r) => r.data),
+  listGroups: () => client.get('/data/groups').then((r) => r.data),
+  listNetworks: () => client.get('/data/networks').then((r) => r.data),
+  listAffiliations: (params) => client.get('/data/affiliations', { params }).then((r) => r.data),
+  listAllParticipations: (params) => client.get('/data/participations', { params }).then((r) => r.data),
+  listRules: (params) => client.get('/data/rules', { params }).then((r) => r.data),
 
   demoReset: () => client.post('/demo/reset').then((r) => r.data),
   demoResetProvider: (providerId) => client.post(`/demo/reset/${providerId}`).then((r) => r.data),
