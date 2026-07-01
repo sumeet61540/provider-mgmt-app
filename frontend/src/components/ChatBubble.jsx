@@ -88,7 +88,7 @@ export default function ChatBubble({ enabled }) {
               <Bot size={18} className="text-sf-teal" />
               <div>
                 <div className="font-bold text-[13.5px]">Provider Ops Assistant</div>
-                <div className="text-[11px] text-white/60">Genzeon AI · read-only</div>
+                <div className="text-[11px] text-white/60">Genzeon AI · confirms before acting</div>
               </div>
             </div>
             <button onClick={() => setIsOpen(false)} className="text-white/60 hover:text-white">
