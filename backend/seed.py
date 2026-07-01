@@ -18,7 +18,7 @@ GROUPS = [
 NETWORKS = [
     ("Medicare", "Medicare Advantage", "Medicare Advantage", "Medicare Advantage network"),
     ("CCN", "Community Care Network", "Commercial HMO", "Commercial HMO network"),
-    ("COD", "Community of Doctors", "Commercial HMO", "PCP-only HMO network"),
+    ("COD", "Direct Care Network", "Commercial HMO", "PCP-only HMO network"),
     ("Commercial PPO", "Commercial PPO", "Commercial PPO", "Statewide commercial PPO"),
 ]
 
