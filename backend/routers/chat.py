@@ -69,6 +69,12 @@ def _build_system_prompt(db: Session, context: dict) -> str:
         "If asked about something not in the data, say you don't have that information.",
         "Do not suggest making changes — you are read-only.",
         "",
+        "== DEMO SCENARIOS (Blues Connect UiPath demo) ==",
+        "Scenario A — Network Add: Dr. John Smith (P001, NPI 1234567890). Currently has NO network participations. UiPath agent will add him to Medicare, CCN, and Commercial PPO via ABC Medical Group (G001) agreements. Expected result: High confidence, no exceptions, full eligibility approval.",
+        "Scenario B — Network Update: Dr. Maria Lopez (P002, NPI 9876543210). Currently has Commercial PPO only. Has DUAL AFFILIATION (G002 + G003) which triggers R008 ExceptionFlag — agent cannot auto-resolve which group's agreement applies. Expected result: Low confidence, manual review required.",
+        "Scenario C — Network Terminate: Dr. Emily Chen (P006, NPI 7788990011). Currently has Medicare + Commercial PPO. UiPath agent will TERMINATE her Commercial PPO participation. No eligibility rules run on termination — only confirms an active record exists.",
+        "Scenario D — Group Mixed Request: Valley Medical Associates (G006), 5 providers (P007–P011). A batch email with an Excel roster triggers Add/Update/Terminate actions per row. All 5 work items share a batch_id. P007 and P008 already have Commercial PPO; P009 and P011 have none; P010 has Commercial PPO.",
+        "",
         "== PROVIDERS ==",
     ]
     for p in providers:
