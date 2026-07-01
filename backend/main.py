@@ -1,6 +1,9 @@
 import logging
 import os
 
+from dotenv import load_dotenv
+load_dotenv()
+
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import func
@@ -9,7 +12,7 @@ from sqlalchemy.orm import Session
 import models
 import seed
 from database import Base, engine, get_db
-from routers import audit, crosswalk, data, demo, participations, providers
+from routers import audit, chat, crosswalk, data, demo, participations, providers
 
 logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"))
 logger = logging.getLogger("provider-mgmt")
@@ -31,6 +34,7 @@ app.include_router(audit.router, prefix="/api/v1")
 app.include_router(demo.router, prefix="/api/v1")
 app.include_router(crosswalk.router, prefix="/api/v1")
 app.include_router(data.router, prefix="/api/v1")
+app.include_router(chat.router, prefix="/api/v1")
 
 
 @app.on_event("startup")

@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import {
   LayoutDashboard, Users, ClipboardList, RotateCcw,
   Database, ChevronDown, ChevronRight,
-  Building2, Network, Link2, UserCheck, ListChecks, ShieldCheck,
+  Building2, Network, Link2, UserCheck, ListChecks, ShieldCheck, Bot,
 } from 'lucide-react'
 import api from '../api/client'
 import ResetConfirmModal from './ResetConfirmModal'
@@ -15,7 +15,7 @@ const dotClass = {
   Complete: 'bg-sf-teal',
 }
 
-export default function Sidebar() {
+export default function Sidebar({ chatEnabled, onToggleChat }) {
   const [showReset, setShowReset] = useState(false)
   const [isDataOpen, setIsDataOpen] = useState(true)
 
@@ -106,6 +106,26 @@ export default function Sidebar() {
         >
           <RotateCcw size={14} /> Reset Demo
         </button>
+        {/* AI Assistant toggle */}
+        <div className="flex items-center justify-between px-3 pt-3 pb-1">
+          <span className="flex items-center gap-1.5 text-[12px] text-white/70">
+            <Bot size={13} /> AI Assistant
+          </span>
+          <button
+            onClick={onToggleChat}
+            className={`relative w-9 h-5 rounded-full transition-colors ${
+              chatEnabled ? 'bg-sf-teal' : 'bg-white/20'
+            }`}
+            title={chatEnabled ? 'Disable AI chat' : 'Enable AI chat'}
+          >
+            <span
+              className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${
+                chatEnabled ? 'translate-x-4' : 'translate-x-0.5'
+              }`}
+            />
+          </button>
+        </div>
+
         <div className="flex gap-2 px-3 pt-2.5 pb-1 text-[11.5px] text-white/55">
           {(status || ['A', 'B', 'C', 'D'].map((s) => ({ scenario: s, status: 'Ready' }))).map((s) => (
             <span key={s.scenario} className="flex items-center gap-1">

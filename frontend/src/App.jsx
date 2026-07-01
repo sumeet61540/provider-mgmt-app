@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import Sidebar from './components/Sidebar.jsx'
 import { ToastProvider } from './components/Toast.jsx'
+import ChatBubble from './components/ChatBubble.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 import ProviderList from './pages/ProviderList.jsx'
 import ProviderDetail from './pages/ProviderDetail.jsx'
@@ -13,10 +15,12 @@ import DataParticipations from './pages/data/DataParticipations.jsx'
 import DataRules from './pages/data/DataRules.jsx'
 
 export default function App() {
+  const [chatEnabled, setChatEnabled] = useState(true)
+
   return (
     <ToastProvider>
       <div className="flex min-h-screen">
-        <Sidebar />
+        <Sidebar chatEnabled={chatEnabled} onToggleChat={() => setChatEnabled((v) => !v)} />
         <div className="flex-1 min-w-0">
           <Routes>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
@@ -36,6 +40,8 @@ export default function App() {
           </Routes>
         </div>
       </div>
+      {/* ChatBubble renders outside Routes so it persists across navigation */}
+      <ChatBubble enabled={chatEnabled} />
     </ToastProvider>
   )
 }
