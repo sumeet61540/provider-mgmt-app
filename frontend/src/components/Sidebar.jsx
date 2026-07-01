@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import {
   LayoutDashboard, Users, ClipboardList, RotateCcw,
   Database, ChevronDown, ChevronRight,
-  Building2, Network, Link2, UserCheck, ListChecks, ShieldCheck, Bot,
+  Building2, Network, Link2, UserCheck, ListChecks, ShieldCheck, Bot, FileText,
 } from 'lucide-react'
 import api from '../api/client'
 import ResetConfirmModal from './ResetConfirmModal'
@@ -80,6 +80,9 @@ export default function Sidebar({ chatEnabled, onToggleChat }) {
             </NavLink>
             <NavLink to="/data/crosswalk" className={subNavClass}>
               <Link2 size={13} /> Crosswalk
+            </NavLink>
+            <NavLink to="/data/agreements" className={subNavClass}>
+              <FileText size={13} /> Agreements
             </NavLink>
             <NavLink to="/data/participations" className={subNavClass}>
               <ListChecks size={13} /> Participations

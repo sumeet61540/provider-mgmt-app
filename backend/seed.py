@@ -6,12 +6,13 @@ from sqlalchemy.orm import Session
 import models
 
 GROUPS = [
-    ("G001", "ABC Medical Group", "12-3456789"),
-    ("G002", "Riverside Community Health", "98-7654321"),
-    ("G003", "Inland Valley Medical Group", "55-4433221"),
-    ("G004", "Desert Health Partners", "66-7788990"),
-    ("G005", "Pacific Coast Medical Group", "77-8899001"),
-    ("G006", "Valley Medical Associates", "62-1234567"),
+    # group_id, group_name, tax_id, primary_county
+    ("G001", "ABC Medical Group",           "45-6789012", "Los Angeles"),
+    ("G002", "Riverside Community Health",  "33-9876543", "Riverside"),
+    ("G003", "Inland Valley Medical Group", "55-4433221", "San Bernardino"),
+    ("G004", "Desert Health Partners",      "66-7788990", "San Bernardino"),
+    ("G005", "Pacific Coast Medical Group", "77-8899001", "San Diego"),
+    ("G006", "Valley Medical Associates",   "62-1234567", "Los Angeles"),
 ]
 
 NETWORKS = [
@@ -21,28 +22,50 @@ NETWORKS = [
     ("Commercial PPO", "Commercial PPO", "Commercial PPO", "Statewide commercial PPO"),
 ]
 
-# Single source of truth for every valid (group, network) -> agreement
-# mapping. Both the pre-demo participations below AND the
-# add/update-participation validation in routers/participations.py read from
-# this — the agreement_id used anywhere in the app must trace back to a row
-# here, so there's no way for a participation's agreement to drift from what
-# the Crosswalk tab actually shows.
+# Agreement Repository — all agreements (including Expired/Pending).
+# Single source of truth for agreement metadata synced with UiPath Data Service.
+# group_id, network_code, agreement_id, product_line — CROSSWALK references these.
+# agreement_id, agreement_name, group_id, network_code, eff_date, exp_date, status
+AGREEMENTS = [
+    ("AGR-G001-CCN-LEGACY", "ABC MG - CCN (Legacy)",      "G001", "CCN",          date(2020, 1, 1), date(2023, 12, 31), "Expired"),
+    ("AGR-G001-MCR",        "ABC MG - Medicare",           "G001", "Medicare",     date(2024, 1, 1), date(2026, 12, 31), "Active"),
+    ("AGR-G001-CCN",        "ABC MG - CCN",                "G001", "CCN",          date(2024, 1, 1), date(2026, 12, 31), "Active"),
+    ("AGR-G001-COD",        "ABC MG - COD",                "G001", "COD",          date(2024, 1, 1), date(2026, 12, 31), "Active"),
+    ("AGR-G001-PPO",        "ABC MG - Commercial PPO",     "G001", "Commercial PPO", date(2024, 1, 1), date(2026, 12, 31), "Active"),
+    ("AGR-G002-MCR",        "RCH - Medicare",              "G002", "Medicare",     date(2023, 7, 1), date(2026, 6, 30),  "Active"),
+    ("AGR-G002-CCN",        "RCH - CCN",                   "G002", "CCN",          date(2023, 7, 1), date(2026, 6, 30),  "Active"),
+    ("AGR-G002-PPO",        "RCH - Commercial PPO",        "G002", "Commercial PPO", date(2023, 7, 1), date(2026, 7, 31), "Active"),
+    ("AGR-G003-PPO",        "IVM - Commercial PPO",        "G003", "Commercial PPO", date(2025, 1, 1), date(2027, 12, 31), "Active"),
+    ("AGR-G003-CCN",        "IVM - CCN",                   "G003", "CCN",          date(2026, 9, 1), date(2028, 8, 31),  "Active"),
+    ("AGR-G004-PPO",        "DHP - Commercial PPO",        "G004", "Commercial PPO", date(2025, 1, 1), date(2027, 12, 31), "Active"),
+    ("AGR-G005-MCR-LEGACY", "PCM - Medicare (Legacy)",     "G005", "Medicare",     date(2022, 1, 1), date(2025, 12, 31), "Expired"),
+    ("AGR-G005-MCR",        "PCM - Medicare",              "G005", "Medicare",     date(2026, 1, 1), date(2028, 12, 31), "Active"),
+    ("AGR-G005-PPO",        "PCM - Commercial PPO",        "G005", "Commercial PPO", date(2026, 1, 1), date(2028, 12, 31), "Active"),
+    ("AGR-G006-PPO",        "VMA - Commercial PPO",        "G006", "Commercial PPO", date(2026, 1, 1), date(2028, 12, 31), "Active"),
+    ("AGR-G006-MCR",        "VMA - Medicare",              "G006", "Medicare",     date(2026, 1, 1), date(2028, 12, 31), "Active"),
+    ("AGR-G006-CCN",        "VMA - CCN",                   "G006", "CCN",          date(2026, 1, 1), date(2028, 12, 31), "Active"),
+]
+
+# Active crosswalk: which (group, network) pairs are in effect for the demo.
+# Only Active agreements appear here — Expired/Pending agreements are in AGREEMENTS
+# but not in the crosswalk used for participation validation.
 # group_id, network_code, agreement_id, product_line
 CROSSWALK = [
-    ("G001", "Medicare", "AGR-G001-MCR", "MA"),
-    ("G001", "CCN", "AGR-G001-CCN", "Commercial HMO"),
-    ("G001", "COD", "AGR-G001-COD", "Commercial HMO"),
+    ("G001", "Medicare",       "AGR-G001-MCR", "MA"),
+    ("G001", "CCN",            "AGR-G001-CCN", "Commercial HMO"),
+    ("G001", "COD",            "AGR-G001-COD", "Commercial HMO"),
     ("G001", "Commercial PPO", "AGR-G001-PPO", "Commercial PPO"),
-    ("G002", "Medicare", "AGR-G002-MCR", "MA"),
-    ("G002", "CCN", "AGR-G002-CCN", "Commercial HMO"),
+    ("G002", "Medicare",       "AGR-G002-MCR", "MA"),
+    ("G002", "CCN",            "AGR-G002-CCN", "Commercial HMO"),
     ("G002", "Commercial PPO", "AGR-G002-PPO", "Commercial PPO"),
-    ("G003", "CCN", "AGR-G003-CCN", "Commercial HMO"),
+    ("G003", "CCN",            "AGR-G003-CCN", "Commercial HMO"),
     ("G003", "Commercial PPO", "AGR-G003-PPO", "Commercial PPO"),
     ("G004", "Commercial PPO", "AGR-G004-PPO", "Commercial PPO"),
-    ("G005", "Medicare", "AGR-G005-MCR", "MA"),
+    ("G005", "Medicare",       "AGR-G005-MCR", "MA"),
     ("G005", "Commercial PPO", "AGR-G005-PPO", "Commercial PPO"),
-    ("G006", "CCN", "AGR-G006-CCN", "Commercial HMO"),
+    ("G006", "CCN",            "AGR-G006-CCN", "Commercial HMO"),
     ("G006", "Commercial PPO", "AGR-G006-PPO", "Commercial PPO"),
+    ("G006", "Medicare",       "AGR-G006-MCR", "MA"),
 ]
 
 
@@ -155,13 +178,23 @@ PRE_DEMO_PARTICIPATIONS = [
 def _seed_reference_data(db: Session):
     """Groups, networks, providers, affiliations — static reference data, seeded once."""
     if db.query(models.Group).count() == 0:
-        for group_id, name, tax_id in GROUPS:
-            db.add(models.Group(group_id=group_id, group_name=name, tax_id=tax_id, status="Active"))
+        for group_id, name, tax_id, primary_county in GROUPS:
+            db.add(models.Group(group_id=group_id, group_name=name, tax_id=tax_id,
+                                primary_county=primary_county, status="Active"))
 
     if db.query(models.Network).count() == 0:
         for code, name, product_line, description in NETWORKS:
             db.add(models.Network(network_code=code, network_name=name,
                                    product_line=product_line, description=description))
+
+    # Agreements must be seeded before Crosswalk (FK dependency)
+    if db.query(models.Agreement).count() == 0:
+        for agr_id, agr_name, group_id, network_code, eff, exp, status in AGREEMENTS:
+            db.add(models.Agreement(
+                agreement_id=agr_id, agreement_name=agr_name, group_id=group_id,
+                network_code=network_code, effective_date=eff, expiration_date=exp, status=status,
+            ))
+    db.flush()
 
     if db.query(models.Crosswalk).count() == 0:
         for group_id, network_code, agreement_id, product_line in CROSSWALK:

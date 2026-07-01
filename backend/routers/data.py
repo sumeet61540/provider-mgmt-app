@@ -102,3 +102,39 @@ def list_rules(
     if network_name:
         query = query.filter(models.NetworkEligibilityRule.network_name == network_name)
     return query.order_by(models.NetworkEligibilityRule.rule_id).all()
+
+
+@router.get("/agreements", response_model=list[schemas.AgreementOut])
+def list_agreements(
+    status: Optional[str] = None,
+    group_id: Optional[str] = None,
+    network_code: Optional[str] = None,
+    db: Session = Depends(get_db),
+):
+    query = (
+        db.query(models.Agreement, models.Group, models.Network)
+        .join(models.Group, models.Group.group_id == models.Agreement.group_id)
+        .join(models.Network, models.Network.network_code == models.Agreement.network_code)
+    )
+    if status:
+        query = query.filter(models.Agreement.status == status)
+    if group_id:
+        query = query.filter(models.Agreement.group_id == group_id)
+    if network_code:
+        query = query.filter(models.Agreement.network_code == network_code)
+
+    rows = query.order_by(models.Agreement.group_id, models.Agreement.network_code).all()
+    return [
+        schemas.AgreementOut(
+            agreement_id=agr.agreement_id,
+            agreement_name=agr.agreement_name,
+            group_id=agr.group_id,
+            group_name=group.group_name,
+            network_code=agr.network_code,
+            network_name=network.network_name,
+            effective_date=agr.effective_date,
+            expiration_date=agr.expiration_date,
+            status=agr.status,
+        )
+        for agr, group, network in rows
+    ]

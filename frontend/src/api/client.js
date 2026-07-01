@@ -32,6 +32,7 @@ export const api = {
   listAffiliations: (params) => client.get('/data/affiliations', { params }).then((r) => r.data),
   listAllParticipations: (params) => client.get('/data/participations', { params }).then((r) => r.data),
   listRules: (params) => client.get('/data/rules', { params }).then((r) => r.data),
+  listAgreements: (params) => client.get('/data/agreements', { params }).then((r) => r.data),
   chat: (messages, context) => client.post('/chat', { messages, context }).then((r) => r.data),
 
   demoReset: () => client.post('/demo/reset').then((r) => r.data),

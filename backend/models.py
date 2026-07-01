@@ -35,6 +35,7 @@ class Group(Base):
     group_id = Column(String, unique=True, nullable=False)
     group_name = Column(String, nullable=False)
     tax_id = Column(String)
+    primary_county = Column(String)
     status = Column(String, default="Active")
 
 
@@ -59,13 +60,27 @@ class Network(Base):
     description = Column(String)
 
 
+class Agreement(Base):
+    __tablename__ = "agreements"
+
+    id = Column(Integer, primary_key=True)
+    agreement_id = Column(String, unique=True, nullable=False)
+    agreement_name = Column(String, nullable=False)
+    group_id = Column(String, ForeignKey("groups.group_id"), nullable=False)
+    network_code = Column(String, ForeignKey("networks.network_code"), nullable=False)
+    effective_date = Column(Date)
+    expiration_date = Column(Date)
+    status = Column(String, default="Active")
+    created_at = Column(DateTime, server_default=func.now())
+
+
 class Crosswalk(Base):
     __tablename__ = "crosswalk"
 
     id = Column(Integer, primary_key=True)
     group_id = Column(String, ForeignKey("groups.group_id"), nullable=False)
     network_code = Column(String, ForeignKey("networks.network_code"), nullable=False)
-    agreement_id = Column(String, unique=True, nullable=False)
+    agreement_id = Column(String, ForeignKey("agreements.agreement_id"), nullable=False)
     product_line = Column(String)
 
 

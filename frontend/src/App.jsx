@@ -13,6 +13,7 @@ import DataNetworks from './pages/data/DataNetworks.jsx'
 import DataAffiliations from './pages/data/DataAffiliations.jsx'
 import DataParticipations from './pages/data/DataParticipations.jsx'
 import DataRules from './pages/data/DataRules.jsx'
+import DataAgreements from './pages/data/DataAgreements.jsx'
 
 export default function App() {
   const [chatEnabled, setChatEnabled] = useState(true)
@@ -37,6 +38,7 @@ export default function App() {
             <Route path="/data/crosswalk" element={<Crosswalk />} />
             <Route path="/data/participations" element={<DataParticipations />} />
             <Route path="/data/rules" element={<DataRules />} />
+            <Route path="/data/agreements" element={<DataAgreements />} />
           </Routes>
         </div>
       </div>

@@ -128,6 +128,22 @@ class GroupOut(BaseModel):
     group_id: str
     group_name: str
     tax_id: Optional[str]
+    primary_county: Optional[str]
+    status: str
+
+    class Config:
+        from_attributes = True
+
+
+class AgreementOut(BaseModel):
+    agreement_id: str
+    agreement_name: str
+    group_id: str
+    group_name: str
+    network_code: str
+    network_name: str
+    effective_date: Optional[date]
+    expiration_date: Optional[date]
     status: str
 
     class Config:
