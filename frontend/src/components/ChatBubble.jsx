@@ -1,15 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { Bot, Send, X } from 'lucide-react'
+import { useQueryClient } from '@tanstack/react-query'
+import { Bot, Send, X, CheckCircle2 } from 'lucide-react'
 import api from '../api/client'
 
 const STARTERS = [
   'Which providers are in Medicare?',
   'Who has dual affiliation?',
-  'What networks is Dr. John Smith eligible for?',
+  'Add Dr. John Smith to Medicare',
   'What agreement applies to ABC Medical Group + CCN?',
-  'Which providers have no active participations?',
   'What does eligibility rule R002 require?',
+  'Terminate Dr. Emily Chen\'s Commercial PPO',
 ]
 
 function usePageContext() {
@@ -23,12 +24,14 @@ function usePageContext() {
 
 export default function ChatBubble({ enabled }) {
   const [isOpen, setIsOpen] = useState(false)
+  // Each message: { role, content, actionTaken? }
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const bottomRef = useRef(null)
   const context = usePageContext()
+  const queryClient = useQueryClient()
 
   useEffect(() => {
     if (isOpen) bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -45,8 +48,12 @@ export default function ChatBubble({ enabled }) {
     setMessages(next)
     setLoading(true)
     try {
-      const { reply } = await api.chat(next, context)
-      setMessages([...next, { role: 'assistant', content: reply }])
+      const { reply, actions_taken } = await api.chat(next, context)
+      setMessages([...next, { role: 'assistant', content: reply, actionTaken: !!actions_taken }])
+      if (actions_taken) {
+        // Refresh all live data so Provider Detail, Dashboard, etc. reflect the change
+        queryClient.invalidateQueries()
+      }
     } catch (err) {
       const msg = err?.response?.data?.detail || 'Could not reach the AI assistant. Please try again.'
       setError(msg)
@@ -111,7 +118,7 @@ export default function ChatBubble({ enabled }) {
             )}
 
             {messages.map((m, i) => (
-              <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+              <div key={i} className={`flex flex-col ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
                 <div
                   className={`max-w-[85%] px-3 py-2 rounded-xl text-[13px] leading-relaxed ${
                     m.role === 'user'
@@ -121,6 +128,11 @@ export default function ChatBubble({ enabled }) {
                 >
                   {m.content}
                 </div>
+                {m.actionTaken && (
+                  <div className="flex items-center gap-1 mt-1 text-[11px] text-sf-teal font-semibold">
+                    <CheckCircle2 size={12} /> Action taken · screens updated
+                  </div>
+                )}
               </div>
             ))}
 
