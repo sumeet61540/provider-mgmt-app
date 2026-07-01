@@ -102,14 +102,43 @@ dual-affiliated provider (e.g. Dr. Maria Lopez, P002) will show agreement
 options from both her groups for the same network — that ambiguity is
 intentional, it's what Scenario B's exception is about.
 
-## Deployment
+## Deployment (Render)
 
-`backend/railway.json` and both services' `Dockerfile`s are included for a
-Railway (backend) + Vercel/Railway (frontend) deploy. Not yet deployed as
-part of this build pass — verify locally first, then:
+Both services are deployed on Render (free tier):
 
-1. Backend: deploy `backend/` to Railway with a persistent volume mounted at
-   `/app/data` (SQLite must survive redeploys).
-2. Frontend: build with `VITE_API_BASE_URL` set to the deployed backend's
-   `/api/v1` URL (it's baked in at build time, not read at runtime), then
-   deploy the static `dist/` output or the provided Nginx Dockerfile.
+| Service | URL | Type |
+|---|---|---|
+| Frontend | https://provider-mgmt-app.onrender.com | Static Site |
+| Backend API | https://provider-mgmt-backend.onrender.com/api/v1 | Docker Web Service |
+| Swagger docs | https://provider-mgmt-backend.onrender.com/docs | — |
+
+**Free tier note:** the backend spins down after ~15 minutes of inactivity. The first request after idle may take 30–60 seconds to wake up. Data resets to the seeded baseline on each cold start (no persistent disk on free tier) — useful for repeatable demo runs.
+
+**To redeploy:** push to `main` on GitHub. Render auto-deploys both services on every push.
+
+**Environment variables required on the backend Render service:**
+- `OPENAI_API_KEY` — required for the AI conversation agent (set via Render Dashboard → provider-mgmt-backend → Environment)
+
+**To deploy from scratch:**
+1. Push the repo to GitHub.
+2. On Render: New → Web Service → connect repo → Root Directory: `backend` → Runtime: Docker → free plan → deploy. Note the assigned URL.
+3. On Render: New → Static Site → connect repo → Root Directory: `frontend` → Build Command: `npm install && npm run build` → Publish Directory: `dist` → add env var `VITE_API_BASE_URL=https://<your-backend>.onrender.com/api/v1` → deploy.
+4. Add Redirects/Rewrites rule on the static site: Source `/*` → Destination `/index.html` → Action: Rewrite (required for React Router client-side routing).
+
+## AI Conversation Agent
+
+A floating "Provider Ops Assistant" chat bubble (bottom-right corner of every screen) lets analysts and demo audiences ask questions and take actions through natural language.
+
+**Built with:** OpenAI `gpt-4o-mini` via function calling. The backend's `POST /api/v1/chat` endpoint pre-loads the full database state (providers, participations, affiliations, crosswalk, eligibility rules, demo scenario descriptions) into the system prompt on every request, then runs a tool-use loop that can execute confirmed write operations directly against the database.
+
+**What it can do:**
+- Answer questions about provider data: "Which providers are in Medicare?", "Does Dr. Lopez have dual affiliation?", "What does rule R002 require?"
+- Add a provider to a network: "Add Dr. John Smith to Medicare"
+- Terminate a participation: "Terminate Dr. Emily Chen's Commercial PPO"
+- Update a participation's agreement or effective date
+
+**Confirmation gate:** the agent always proposes the action and waits for explicit confirmation ("yes", "go ahead", etc.) before executing any write. It will also decline ineligible requests — e.g. "Add Dr. Emily Chen to COD" is refused because her Neurology specialty fails eligibility rule R001 (COD is PCP-only).
+
+**Write actions** use `source=API`, so they appear with the teal "🤖 UiPath Agent" badge in the UI — the same badge that real UiPath automation produces. After any write action, all open screens (Provider Detail, Dashboard, etc.) refresh automatically.
+
+**Toggle:** the AI Assistant can be turned on/off via the toggle switch in the sidebar's Demo Controls section without navigating away from the current screen.
