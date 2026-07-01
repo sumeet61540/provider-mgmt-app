@@ -16,7 +16,7 @@ GROUPS = [
 ]
 
 NETWORKS = [
-    ("Medicare", "Medicare Advantage", "MA", "Medicare Advantage network"),
+    ("Medicare", "Medicare Advantage", "Medicare Advantage", "Medicare Advantage network"),
     ("CCN", "Community Care Network", "Commercial HMO", "Commercial HMO network"),
     ("COD", "Community of Doctors", "Commercial HMO", "PCP-only HMO network"),
     ("Commercial PPO", "Commercial PPO", "Commercial PPO", "Statewide commercial PPO"),
@@ -51,21 +51,21 @@ AGREEMENTS = [
 # but not in the crosswalk used for participation validation.
 # group_id, network_code, agreement_id, product_line
 CROSSWALK = [
-    ("G001", "Medicare",       "AGR-G001-MCR", "MA"),
+    ("G001", "Medicare",       "AGR-G001-MCR", "Medicare Advantage"),
     ("G001", "CCN",            "AGR-G001-CCN", "Commercial HMO"),
     ("G001", "COD",            "AGR-G001-COD", "Commercial HMO"),
     ("G001", "Commercial PPO", "AGR-G001-PPO", "Commercial PPO"),
-    ("G002", "Medicare",       "AGR-G002-MCR", "MA"),
+    ("G002", "Medicare",       "AGR-G002-MCR", "Medicare Advantage"),
     ("G002", "CCN",            "AGR-G002-CCN", "Commercial HMO"),
     ("G002", "Commercial PPO", "AGR-G002-PPO", "Commercial PPO"),
     ("G003", "CCN",            "AGR-G003-CCN", "Commercial HMO"),
     ("G003", "Commercial PPO", "AGR-G003-PPO", "Commercial PPO"),
     ("G004", "Commercial PPO", "AGR-G004-PPO", "Commercial PPO"),
-    ("G005", "Medicare",       "AGR-G005-MCR", "MA"),
+    ("G005", "Medicare",       "AGR-G005-MCR", "Medicare Advantage"),
     ("G005", "Commercial PPO", "AGR-G005-PPO", "Commercial PPO"),
     ("G006", "CCN",            "AGR-G006-CCN", "Commercial HMO"),
     ("G006", "Commercial PPO", "AGR-G006-PPO", "Commercial PPO"),
-    ("G006", "Medicare",       "AGR-G006-MCR", "MA"),
+    ("G006", "Medicare",       "AGR-G006-MCR", "Medicare Advantage"),
 ]
 
 
