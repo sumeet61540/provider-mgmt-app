@@ -20,26 +20,32 @@ export default function App() {
 
   return (
     <ToastProvider>
-      <div className="flex min-h-screen">
-        <Sidebar chatEnabled={chatEnabled} onToggleChat={() => setChatEnabled((v) => !v)} />
-        <div className="flex-1 min-w-0">
-          <Routes>
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/providers" element={<ProviderList />} />
-            <Route path="/providers/:providerId" element={<ProviderDetail />} />
-            <Route path="/audit" element={<AuditLog />} />
-            {/* /crosswalk redirect — preserves any bookmarks to the old URL */}
-            <Route path="/crosswalk" element={<Navigate to="/data/crosswalk" replace />} />
-            {/* Data section */}
-            <Route path="/data/groups" element={<DataGroups />} />
-            <Route path="/data/networks" element={<DataNetworks />} />
-            <Route path="/data/affiliations" element={<DataAffiliations />} />
-            <Route path="/data/crosswalk" element={<Crosswalk />} />
-            <Route path="/data/participations" element={<DataParticipations />} />
-            <Route path="/data/rules" element={<DataRules />} />
-            <Route path="/data/agreements" element={<DataAgreements />} />
-          </Routes>
+      <div className="flex flex-col min-h-screen">
+        {/* Full-width application title banner */}
+        <div className="w-full bg-sf-dark text-white text-center py-2.5 text-[13px] font-semibold tracking-wide border-b border-white/10 shrink-0">
+          Provider Network Management Application
+        </div>
+        <div className="flex flex-1 min-h-0">
+          <Sidebar chatEnabled={chatEnabled} onToggleChat={() => setChatEnabled((v) => !v)} />
+          <div className="flex-1 min-w-0">
+            <Routes>
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/providers" element={<ProviderList />} />
+              <Route path="/providers/:providerId" element={<ProviderDetail />} />
+              <Route path="/audit" element={<AuditLog />} />
+              {/* /crosswalk redirect — preserves any bookmarks to the old URL */}
+              <Route path="/crosswalk" element={<Navigate to="/data/crosswalk" replace />} />
+              {/* Data section */}
+              <Route path="/data/groups" element={<DataGroups />} />
+              <Route path="/data/networks" element={<DataNetworks />} />
+              <Route path="/data/affiliations" element={<DataAffiliations />} />
+              <Route path="/data/crosswalk" element={<Crosswalk />} />
+              <Route path="/data/participations" element={<DataParticipations />} />
+              <Route path="/data/rules" element={<DataRules />} />
+              <Route path="/data/agreements" element={<DataAgreements />} />
+            </Routes>
+          </div>
         </div>
       </div>
       {/* ChatBubble renders outside Routes so it persists across navigation */}

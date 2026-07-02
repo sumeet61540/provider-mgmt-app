@@ -41,11 +41,7 @@ export default function Sidebar({ chatEnabled, onToggleChat }) {
 
   return (
     <aside className="w-60 shrink-0 bg-sf-dark text-white flex flex-col sticky top-0 h-screen overflow-y-auto">
-      <div className="px-5 py-5 pb-4 font-extrabold text-[15px] border-b border-white/10 flex items-center gap-2 shrink-0">
-        Genzeon <span className="text-white/40 font-normal">×</span> UiPath
-      </div>
-
-      <nav className="p-2.5 flex-1">
+      <nav className="p-2.5 flex-1 pt-3.5">
         <NavLink to="/dashboard" className={navClass}>
           <LayoutDashboard size={16} /> Dashboard
         </NavLink>
@@ -100,14 +96,14 @@ export default function Sidebar({ chatEnabled, onToggleChat }) {
 
       <div className="p-2.5 border-t border-white/10 shrink-0">
         <div className="text-[10.5px] uppercase tracking-wider text-white/40 px-3 pt-1 pb-1.5">
-          Demo Controls
+          Controls
         </div>
         <button
           data-testid="demo-reset-btn"
           onClick={() => setShowReset(true)}
           className="w-full bg-sf-teal hover:bg-[#00928a] text-white font-semibold text-[13px] py-2.5 rounded-md flex items-center justify-center gap-1.5"
         >
-          <RotateCcw size={14} /> Reset Demo
+          <RotateCcw size={14} /> Reset
         </button>
         {/* AI Assistant toggle */}
         <div className="flex items-center justify-between px-3 pt-3 pb-1">
@@ -139,10 +135,8 @@ export default function Sidebar({ chatEnabled, onToggleChat }) {
         </div>
       </div>
 
-      <div className="px-4 py-4 text-[11px] text-white/40 border-t border-white/10 shrink-0">
-        Provider Ops Simulator
-        <br />
-        Demo v1.0
+      <div className="px-4 py-3 text-[13px] font-extrabold text-white/50 border-t border-white/10 shrink-0">
+        Genzeon <span className="text-white/30 font-normal">×</span> UiPath
       </div>
 
       {showReset && <ResetConfirmModal onClose={() => setShowReset(false)} />}
