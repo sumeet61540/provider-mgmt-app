@@ -21,9 +21,14 @@ export default function App() {
   return (
     <ToastProvider>
       <div className="flex flex-col min-h-screen">
-        {/* Full-width application title banner */}
-        <div className="w-full bg-sf-dark text-white text-center py-2.5 text-[13px] font-semibold tracking-wide border-b border-white/10 shrink-0">
-          Provider Network Management Application
+        {/* Split-color topbar */}
+        <div className="flex shrink-0" style={{ height: '56px', boxShadow: '0 1px 6px rgba(0,0,0,0.08)', position: 'relative', zIndex: 50 }}>
+          <div style={{ width: '240px', minWidth: '240px', backgroundColor: '#0F2D5E' }} />
+          <div className="flex items-center flex-1 bg-white px-7">
+            <span style={{ color: '#0F2D5E', fontSize: '18px', fontWeight: 600, letterSpacing: '-0.01em' }}>
+              Provider Network Management
+            </span>
+          </div>
         </div>
         <div className="flex flex-1 min-h-0">
           <Sidebar chatEnabled={chatEnabled} onToggleChat={() => setChatEnabled((v) => !v)} />
