@@ -21,14 +21,11 @@ export default function App() {
   return (
     <ToastProvider>
       <div className="flex flex-col min-h-screen">
-        {/* Split-color topbar */}
-        <div className="flex shrink-0" style={{ height: '56px', boxShadow: '0 1px 6px rgba(0,0,0,0.08)', position: 'relative', zIndex: 50 }}>
-          <div style={{ width: '240px', minWidth: '240px', backgroundColor: '#0F2D5E' }} />
-          <div className="flex items-center flex-1 bg-white px-7">
-            <span style={{ color: '#0F2D5E', fontSize: '18px', fontWeight: 600, letterSpacing: '-0.01em' }}>
-              Provider Network Management
-            </span>
-          </div>
+        {/* Full-width centered topbar */}
+        <div className="flex items-center justify-center shrink-0" style={{ height: '56px', backgroundColor: '#0F2D5E', borderBottom: '2px solid #00A99D', position: 'relative', zIndex: 50 }}>
+          <span style={{ color: '#FFFFFF', fontSize: '22px', fontWeight: 700 }}>
+            Provider Network Management
+          </span>
         </div>
         <div className="flex flex-1 min-h-0">
           <Sidebar chatEnabled={chatEnabled} onToggleChat={() => setChatEnabled((v) => !v)} />
