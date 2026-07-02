@@ -22,8 +22,8 @@ export default function App() {
     <ToastProvider>
       <div className="flex flex-col min-h-screen">
         {/* Full-width centered topbar */}
-        <div className="flex items-center justify-center shrink-0" style={{ height: '56px', backgroundColor: '#0F2D5E', borderBottom: '2px solid #00A99D', position: 'relative', zIndex: 50 }}>
-          <span style={{ color: '#FFFFFF', fontSize: '22px', fontWeight: 700 }}>
+        <div className="flex items-center justify-center shrink-0" style={{ height: '56px', backgroundColor: '#FFFFFF', borderBottom: '4px solid #CBD5E1', position: 'relative', zIndex: 50 }}>
+          <span style={{ color: '#0F2D5E', fontSize: '22px', fontWeight: 700 }}>
             Provider Network Management
           </span>
         </div>
